@@ -1,31 +1,32 @@
-import JobCard from './JobCard';
+import { useState } from 'react';
+import HomePage from './components/HomePage';
+import { TEST_JOBS } from './TEST_JOBS';
+import { Link, Route, Routes } from 'react-router-dom';
+import JobPage from './components/JobPage';
+import { Container, Navbar, Nav } from 'react-bootstrap';
 
-const jobList = [
-  {
-    id: 0,
-    name: "front-end developer",
-    company: "Apple",
-    status: null
-  },
-  {
-    id: 1,
-    name: "back-end developer",
-    company: "Google",
-    status: null
-  },
-  {
-    id: 2,
-    name: "full stack developer",
-    company: "TikTok",
-    status: null
-  }
-]
+
 
 function App() {
+  const [jobsList, setJobsList] = useState( TEST_JOBS )
+
   return (
     <div>
-      <h1>My Job Tracking App</h1>
-      {jobList.map(j => <JobCard job={j} />)}
+      <Navbar bg="dark" data-bs-theme="dark">
+        <Container>
+          <Navbar.Brand as={Link} to='/'>My Job Applications</Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link as={Link} to='/' >Home</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
+
+      <Container className='mt-4'>
+        <Routes>
+            <Route path='/' element={ <HomePage jobsList={jobsList} /> } />
+            <Route path='/jobs/:jobId' element={ <JobPage jobsList={jobsList} /> } />
+        </Routes>
+      </Container>
     </div>
   );
 }
