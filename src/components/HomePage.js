@@ -3,7 +3,7 @@ import JobCard from "./JobCard";
 
 
 const HomePage = ({jobsList}) => {
-    const [modeFilter, setModeFilter] = useState("remote");
+    const [modeFilter, setModeFilter] = useState("All");
 
     let filterJobs;
 
