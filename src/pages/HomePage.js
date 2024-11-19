@@ -1,5 +1,5 @@
 import { useState } from "react";
-import JobCard from "./JobCard";
+import JobCard from "../components/JobCard";
 
 
 const HomePage = ({jobsList}) => {
@@ -21,7 +21,7 @@ const HomePage = ({jobsList}) => {
         <button className='btn btn-primary me-2' onClick={() => setModeFilter("onsite")}>Onsite</button>
         <button className='btn btn-primary' onClick={() => setModeFilter("hybrid")}>Hybrid</button>
       </div>
-        {filterJobs.map(j => <JobCard job={j} />)}
+        {filterJobs.map((j, index) => <JobCard key={index} job={j} />)}
     </div>
   )
 }

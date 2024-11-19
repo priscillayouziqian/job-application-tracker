@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import HomePage from './components/HomePage';
+import HomePage from './pages/HomePage';
+import AddApplicatonPage from './pages/AddApplicatonPage';
 import { TEST_JOBS } from './TEST_JOBS';
 import { Route, Routes } from 'react-router-dom';
 import { Container } from "react-bootstrap";
-import JobPage from './components/JobPage';
+import JobPage from './pages/JobPage';
 import Header from './components/Header';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Routes>
             <Route path='/' element={ <HomePage jobsList={jobsList} /> } />
             <Route path='/jobs/:jobId' element={ <JobPage jobsList={jobsList} /> } />
+            <Route path='/addApplication' element={ <AddApplicatonPage /> } />
         </Routes>
       </Container>
     </div>
