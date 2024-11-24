@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import HomePage from './pages/HomePage';
 import AddApplicatonPage from './pages/AddApplicatonPage';
-import { TEST_JOBS } from './TEST_JOBS';
+import { TEST_JOBS } from './shared/TEST_JOBS';
 import { Route, Routes } from 'react-router-dom';
 import { Container } from "react-bootstrap";
 import JobPage from './pages/JobPage';

@@ -4,27 +4,27 @@ export const TEST_JOBS = [
       name: "front-end developer",
       mode: "remote",
       company: "Apple",
-      status: null
+      status: "Resume submitted"
     },
     {
       id: 1,
       name: "back-end developer",
       mode: "remote",
       company: "Google",
-      status: null
+      status: "Online Accessment"
     },
     {
       id: 2,
       name: "full stack developer",
       mode: "onsite",
       company: "TikTok",
-      status: null
+      status: "Interview 1"
     },
     {
       id: 3,
       name: "full stack developer",
       mode: "hybrid",
       company: "Meta",
-      status: null
+      status: "Interview 2"
     }
   ]

@@ -4,7 +4,6 @@ import { useState } from "react";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    console.log("zhaoyi")
     const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
