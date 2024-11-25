@@ -9,20 +9,22 @@ const Header = () => {
   return (
     <Navbar bg="dark" data-bs-theme="dark" expand="lg">
         <Container>
-          <NavbarBrand as={Link} to='/'>
+          <NavbarBrand as={Link} to='/' className="ps-2">
           My Job Applications
           </NavbarBrand>
 
           <NavbarToggle aria-controls="basic-navbar-nav" onClick={toggleMenu} />
 
           <NavbarCollapse id="basic-navbar-nav" in={menuOpen}>
-            <Nav className="me-auto" navbar>
+            <Nav className="ms-auto" navbar>
                 <NavItem>
-                    <NavLink className='nav-link' to='/' >Home
+                    <NavLink className='nav-link' to='/' >
+                    <i className='fa fa-home fa-lg' /> Home
                     </NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink className='nav-link' to='/addApplication' >Add Application
+                    <NavLink className='nav-link' to='/addApplication' >
+                    <i className='fa fa-info fa-lg' /> Add Application
                     </NavLink>
                 </NavItem>
             </Nav>

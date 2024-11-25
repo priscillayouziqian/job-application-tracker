@@ -17,6 +17,13 @@ const HomePage = ({ jobsList }) => {
         filterJobs = filterJobs.filter((job) => job.type === tempTypeFilter);
     }
 
+    // Effect to show alert when no jobs are found
+    useEffect(() => {
+        if (noJobsAlert) {
+            alert(`No matches found for the selected mode and type! Try another search.`);
+        }
+    }, [noJobsAlert]); // Dependency on noJobsAlert
+
     // Effect to check for no jobs and reset filters
     useEffect(() => {
         if (filterJobs.length === 0) {
@@ -28,13 +35,6 @@ const HomePage = ({ jobsList }) => {
             setNoJobsAlert(false);
         }
     }, [filterJobs]); // Dependency on filterJobs
-
-    // Effect to show alert when no jobs are found
-    useEffect(() => {
-        if (noJobsAlert) {
-            alert(`No job applications match your selected job mode: ${modeFilter} and type: ${tempTypeFilter}! Try another search.`);
-        }
-    }, [noJobsAlert, modeFilter, tempTypeFilter]); // Dependency on noJobsAlert, modeFilter, and tempTypeFilter
 
     return (
         <div>
