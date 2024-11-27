@@ -4,8 +4,6 @@ const JobCard = ({job}) => {
     return (
         <div className="bg-light border p-4 m-2 text-center">
             <h4>{job.name}</h4>
-            <p>{job.status}</p>
-            <p>{job.company}</p>
             <p>{job.type}</p>
             <p>{job.mode}</p>
             <Link 

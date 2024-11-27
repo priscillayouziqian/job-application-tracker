@@ -7,7 +7,8 @@ export const TEST_JOBS = [
       company: "Apple",
       jobLink: "https://apple.com/careers",
       skills:["Javascript", "React.js"],
-      status: "Resume submitted"
+      status: "Resume submitted",
+      dateApplied: '2024-08-08T11:00Z'
     },
     {
       id: 1,
@@ -17,7 +18,8 @@ export const TEST_JOBS = [
       company: "Google",
       jobLink: "https://google.com/careers",
       skills:["Angular", "Node.js"],
-      status: "Online Accessment"
+      status: "Online Accessment",
+      dateApplied: '2024-08-08T11:10Z'
     },
     {
       id: 2,
@@ -27,7 +29,8 @@ export const TEST_JOBS = [
       company: "TikTok",
       jobLink: "https://tiktok.com/careers",
       skills:["Java", "python", "React", "TypeScript"],
-      status: "Interview 1"
+      status: "Interview 1",
+      dateApplied: '2024-08-09T12:00Z'
     },
     {
       id: 3,
@@ -37,6 +40,7 @@ export const TEST_JOBS = [
       company: "Meta",
       jobLink: "https://facebook.com/careers",
       skills: ["Go", "Java", "JavaScript", "cloud"],
-      status: "Interview 2"
+      status: "Interview 2",
+      dateApplied: '2024-08-01T14:00Z'
     }
   ]

@@ -1,4 +1,7 @@
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import { formatDate } from "../utils/formateDate";
+import NotesList from "../notes/NotesList";
 
 
 const JobPage = ({jobsList}) => {
@@ -14,10 +17,21 @@ const JobPage = ({jobsList}) => {
     }
 
   return (
-    <div>
-        <h3>{job.name}</h3>
-        <p>{job.mode}</p>
-    </div>
+    <Container>
+      <Row>
+        <Col md='5' className='m-1'>
+          <h3>{job.name}</h3>
+          <p>Applied company: {job.company}</p>
+          <p>Position mode: {job.mode}</p>
+          <p>Application status: {job.status}</p>
+          <p>Date applied: {formatDate(job.dateApplied)}</p>
+        </Col>
+
+        <NotesList jobId={jobId} />
+
+      </Row>
+        
+    </Container>
   )
 }
 
