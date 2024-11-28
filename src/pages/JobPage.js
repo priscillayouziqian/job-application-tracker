@@ -3,7 +3,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import { formatDate } from "../utils/formateDate";
 import NotesList from "../notes/NotesList";
 
-
 const JobPage = ({jobsList}) => {
     // const jobId = 2; //just set it hard code to test
     let { jobId } = useParams()

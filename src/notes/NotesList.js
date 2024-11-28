@@ -1,10 +1,12 @@
 import { Col } from 'react-bootstrap';
 import Note from './Note';
 import { selectNotesByJobId } from './notesSlice';
+import NoteForm from './NoteForm';
+import { useSelector } from 'react-redux';
 
 
 const NotesList = ({jobId}) => {
-    const notes = selectNotesByJobId(jobId);
+    const notes = useSelector(selectNotesByJobId(jobId));
 
     if(notes && notes.length > 0){
         return (
@@ -13,6 +15,8 @@ const NotesList = ({jobId}) => {
                 {notes.map((note) => {
                     return <Note key={note.id} note={note} />;
                 })}
+
+                <NoteForm jobId={jobId} />
             </Col>
         )
     }
