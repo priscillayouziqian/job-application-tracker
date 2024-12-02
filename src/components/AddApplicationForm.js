@@ -1,6 +1,7 @@
 import { Button, Label, Col, FormGroup } from "reactstrap";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { validateAddApplicationForm } from "../utils/validateAddApplicationForm";
+import SkillsCheckboxGroup from "./SkillsCheckboxGroup";
 import { useNavigate } from 'react-router-dom';
 
 const AddApplicationForm = () => {
@@ -8,7 +9,7 @@ const AddApplicationForm = () => {
 
     const handleSubmit = (values, { resetForm }) => {
         console.log('Application values: ', values);
-        console.log('in JSON format: ', JSON.stringify(values));
+        // console.log('in JSON format: ', JSON.stringify(values));
 
         alert('New job application entered successfully!');
         resetForm();
@@ -22,6 +23,8 @@ const AddApplicationForm = () => {
         mode: "",
         company: "",
         status: "",
+        type: "",
+        skills: []
       }}
       onSubmit={handleSubmit}
       validate={validateAddApplicationForm}
@@ -91,6 +94,36 @@ const AddApplicationForm = () => {
             </Field>
             <ErrorMessage name="status">
                 {(msg) => <p className="text-danger">{msg}</p>}
+            </ErrorMessage>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label htmlFor="type" md="2">
+            Job Type
+          </Label>
+          <Col md="10">
+            <Field
+                name='type'
+                as='select'
+                className='form-control'>
+                  <option>Select...</option>
+                  <option>Full time</option>
+                  <option>Part time</option>
+                  <option>Contract</option>
+            </Field>
+            <ErrorMessage name="type">
+                {(msg) => <p className="text-danger">{msg}</p>}
+            </ErrorMessage>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label htmlFor="skills" md="2">
+            Preferred skills
+          </Label>
+          <Col md="10">
+            <SkillsCheckboxGroup name="skills" />
+            <ErrorMessage name="skills">
+              {(msg) => <p className="text-danger">{msg}</p>}
             </ErrorMessage>
           </Col>
         </FormGroup>

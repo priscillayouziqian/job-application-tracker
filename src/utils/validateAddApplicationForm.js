@@ -13,6 +13,9 @@ export const validateAddApplicationForm = (values) => {
     if(!values.status){
         errors.status = 'Required';
     }
+    if(!values.type){
+        errors.type = 'Required';
+    }
 
     return errors;
 }
