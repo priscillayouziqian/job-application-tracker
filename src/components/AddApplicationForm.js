@@ -8,8 +8,19 @@ const AddApplicationForm = () => {
     const navigate = useNavigate();
 
     const handleSubmit = (values, { resetForm }) => {
-        console.log('Application values: ', values);
+        // console.log('Application values: ', values);
         // console.log('in JSON format: ', JSON.stringify(values));
+        const application = {
+            name: values.name,
+            mode: values.type,
+            company: values.company,
+            status: values.status,
+            type: values.type,
+            skills: values.skills,
+            jobLink: values.jobLink,
+            dateApplied: new Date(Date.now()).toISOString()
+        };
+        console.log(application);
 
         alert('New job application entered successfully!');
         resetForm();
@@ -24,7 +35,8 @@ const AddApplicationForm = () => {
         company: "",
         status: "",
         type: "",
-        skills: []
+        skills: [],
+        jobLink: ""
       }}
       onSubmit={handleSubmit}
       validate={validateAddApplicationForm}
@@ -124,6 +136,20 @@ const AddApplicationForm = () => {
             <SkillsCheckboxGroup name="skills" />
             <ErrorMessage name="skills">
               {(msg) => <p className="text-danger">{msg}</p>}
+            </ErrorMessage>
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label htmlFor="jobLink" md="2">
+            Job link
+          </Label>
+          <Col md="10">
+            <Field 
+                name='jobLink'
+                placeholder='Job Link'
+                className="form-control" />
+            <ErrorMessage name="jobLink">
+                {(msg) => <p className="text-danger">{msg}</p>}
             </ErrorMessage>
           </Col>
         </FormGroup>

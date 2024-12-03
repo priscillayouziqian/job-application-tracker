@@ -23,6 +23,8 @@ const JobPage = ({jobsList}) => {
           <p>Applied company: {job.company}</p>
           <p>Position mode: {job.mode}</p>
           <p>Application status: {job.status}</p>
+          <p>Skills: {job.skills.join(', ')}</p>
+          <p>Job link: <a href={job.jobLink} target="_blank" rel="noopener noreferrer">{job.jobLink}</a></p>
           <p>Date applied: {formatDate(job.dateApplied)}</p>
         </Col>
 
