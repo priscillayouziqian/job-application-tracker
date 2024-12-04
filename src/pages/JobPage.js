@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Card, ListGroup } from "react-bootstrap";
 import { formatDate } from "../utils/formateDate";
 import NotesList from "../notes/NotesList";
 
@@ -19,19 +19,24 @@ const JobPage = ({jobsList}) => {
     <Container>
       <Row>
         <Col md='5' className='m-1'>
-          <h3>{job.name}</h3>
-          <p>Applied company: {job.company}</p>
-          <p>Position mode: {job.mode}</p>
-          <p>Application status: {job.status}</p>
-          <p>Skills: {job.skills.join(', ')}</p>
-          <p>Job link: <a href={job.jobLink} target="_blank" rel="noopener noreferrer">{job.jobLink}</a></p>
-          <p>Date applied: {formatDate(job.dateApplied)}</p>
+          <Card style={{ width: '100%' }}>
+            <Card.Body>
+              <Card.Title className="mb-3">{job.name}</Card.Title>
+              <Card.Text className="mb-2 text-muted">Applied company: {job.company}</Card.Text>
+              <Card.Text>Position mode: {job.mode}</Card.Text>
+              <Card.Text>Application status: {job.status}</Card.Text>
+            </Card.Body>
+            <ListGroup className="list-group-flush">
+              <ListGroup.Item>Skills: {job.skills.join(', ')}</ListGroup.Item>
+              <ListGroup.Item>Job link: <a href={job.jobLink} target="_blank" rel="noopener noreferrer">{job.jobLink}</a></ListGroup.Item>
+              <ListGroup.Item>Date applied: {formatDate(job.dateApplied)}</ListGroup.Item>
+            </ListGroup>
+          </Card>
         </Col>
 
         <NotesList jobId={jobId} />
-
-      </Row>
         
+      </Row>
     </Container>
   )
 }
