@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Col } from 'react-bootstrap';
 import JobCard from '../components/JobCard';
 
-const HomePage = ({ jobsList }) => {
+const HomePage = ({ jobsList, isLoading }) => {
     const [modeFilter, setModeFilter] = useState("All");
     const [tempFilter, setTempFilter] = useState("All");
     const [tempTypeFilter, setTempTypeFilter] = useState("All");
@@ -21,15 +21,17 @@ const HomePage = ({ jobsList }) => {
             filteredJobs = filteredJobs.filter((job) => job.type === tempTypeFilter);
         }
 
-        setFilterJobs(filteredJobs); //update filterJobs state
+        setFilterJobs(filteredJobs); // Update filterJobs state
 
-        //show alert if no jobs are found
-        setNoJobsAlert(filteredJobs.length === 0);
-    }, [modeFilter, tempTypeFilter, jobsList]); // Dependency on filters and jobsList
+        // Show alert if no jobs are found and loading is complete
+        if (!isLoading) {
+            setNoJobsAlert(filteredJobs.length === 0);
+        }
+    }, [modeFilter, tempTypeFilter, jobsList, isLoading]); // Dependency on filters, jobsList, and loading state
 
     const handleAlertClose = () => {
-        setShow(false); //hide the alert
-        //reset mode, type, temp filters to All
+        setShow(false); // Hide the alert
+        // Reset mode, type, temp filters to All
         setModeFilter("All");
         setTempTypeFilter("All");
         setTempFilter("All");
@@ -45,7 +47,7 @@ const HomePage = ({ jobsList }) => {
         }
 
         setFilterJobs(filteredJobs); 
-        setNoJobsAlert(filteredJobs.length === 0);// Check if no jobs are available and update alert state
+        setNoJobsAlert(filteredJobs.length === 0); // Check if no jobs are available and update alert state
         setShow(true); // Show the alert again if no jobs are found
     };
 
@@ -85,7 +87,7 @@ const HomePage = ({ jobsList }) => {
                         </Col>
                     ))
                 ) : (
-                    <p className="text-center mt-3">No job applications available.</p>
+                    !isLoading && <p className="text-center mt-3">No job applications available.</p>
                 )}
             </div>
         </div>

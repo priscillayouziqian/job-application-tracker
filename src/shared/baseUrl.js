@@ -1,0 +1,1 @@
+export const baseUrl = 'http://localhost:3001/'; //where to find the data: from json-server

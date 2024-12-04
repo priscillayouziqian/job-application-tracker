@@ -1,8 +1,4 @@
 export const NOTES = [
-    // {
-    //     id: 0,
-    //     jobId: 0
-    // },
     {
         id: 1,
         jobId: 1,
