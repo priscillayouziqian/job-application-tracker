@@ -49,3 +49,9 @@ export const jobsReducer = jobsSlice.reducer;
 export const selectAllJobs = (state) => {
     return state.jobs.jobsArray;
 }
+
+export const selectJobById = (id) => (state) => {
+    return state.jobs.jobsArray.find(
+        (job) => job.id == parseInt(id)
+    );
+}

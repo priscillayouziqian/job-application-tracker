@@ -3,10 +3,21 @@ import Note from './Note';
 import { selectNotesByJobId } from './notesSlice';
 import NoteForm from './NoteForm';
 import { useSelector } from 'react-redux';
+import Error from '../components/Error';
+import Loading from '../components/Loading';
 
 
 const NotesList = ({jobId}) => {
     const notes = useSelector(selectNotesByJobId(jobId));
+    const isLoading = useSelector((state) => state.notes.isLoading);
+    const errMsg = useSelector((state) => state.notes.errMsg); 
+
+    if(isLoading){
+        return <Loading />;
+    }
+    if(errMsg){
+        return <Error errMsg={errMsg} />
+    }
 
     if(notes && notes.length > 0){
         return (

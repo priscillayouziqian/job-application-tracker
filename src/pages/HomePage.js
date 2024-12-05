@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Col } from 'react-bootstrap';
-import JobCard from '../components/JobCard';
+import { Alert, Row } from 'react-bootstrap';
+import { selectAllJobs } from '../jobs/jobsSlice';
+import Error from '../components/Error';
+import Loading from '../components/Loading';
+import { useSelector } from 'react-redux';
+import JobFilters from '../jobs/JobFilters';
+import JobList from '../jobs/JobList';
 
-const HomePage = ({ jobsList, isLoading }) => {
+const HomePage = () => {
+    const jobsList = useSelector(selectAllJobs);
+    const isLoading = useSelector((state) => state.jobs.isLoading);
+    const errMsg = useSelector((state) => state.jobs.errMsg);
+
     const [modeFilter, setModeFilter] = useState("All");
-    const [tempFilter, setTempFilter] = useState("All");
     const [tempTypeFilter, setTempTypeFilter] = useState("All");
     const [noJobsAlert, setNoJobsAlert] = useState(false);
     const [show, setShow] = useState(true);
     const [filterJobs, setFilterJobs] = useState(jobsList);
 
-    useEffect(() => {
-        let filteredJobs = jobsList;
+    const filterJobsByModeAndType = (jobs) => {
+        let filteredJobs = jobs;
 
         if (modeFilter !== "All") {
             filteredJobs = filteredJobs.filter((job) => job.mode === modeFilter);
@@ -21,35 +29,43 @@ const HomePage = ({ jobsList, isLoading }) => {
             filteredJobs = filteredJobs.filter((job) => job.type === tempTypeFilter);
         }
 
-        setFilterJobs(filteredJobs); // Update filterJobs state
+        return filteredJobs;
+    };
 
-        // Show alert if no jobs are found and loading is complete
+    useEffect(() => {
+        const filteredJobs = filterJobsByModeAndType(jobsList);
+        setFilterJobs(filteredJobs);
         if (!isLoading) {
             setNoJobsAlert(filteredJobs.length === 0);
         }
-    }, [modeFilter, tempTypeFilter, jobsList, isLoading]); // Dependency on filters, jobsList, and loading state
+    }, [modeFilter, tempTypeFilter, jobsList, isLoading]);
 
     const handleAlertClose = () => {
-        setShow(false); // Hide the alert
-        // Reset mode, type, temp filters to All
+        setShow(false);
         setModeFilter("All");
         setTempTypeFilter("All");
-        setTempFilter("All");
-        
-        let filteredJobs = jobsList;
 
-        if (modeFilter !== "All") {
-            filteredJobs = filteredJobs.filter((job) => job.mode === modeFilter);
-        }
-
-        if (tempTypeFilter !== "All") {
-            filteredJobs = filteredJobs.filter((job) => job.type === tempTypeFilter);
-        }
-
-        setFilterJobs(filteredJobs); 
-        setNoJobsAlert(filteredJobs.length === 0); // Check if no jobs are available and update alert state
-        setShow(true); // Show the alert again if no jobs are found
+        const filteredJobs = filterJobsByModeAndType(jobsList);
+        setFilterJobs(filteredJobs);
+        setNoJobsAlert(filteredJobs.length === 0);
+        setShow(true);
     };
+
+    if (isLoading) {
+        return (
+            <Row>
+                <Loading />
+            </Row>
+        );
+    }
+
+    if (errMsg) {
+        return (
+            <Row>
+                <Error errMsg={errMsg} />
+            </Row>
+        );
+    }
 
     return (
         <div>
@@ -63,33 +79,17 @@ const HomePage = ({ jobsList, isLoading }) => {
                     </p>
                 </Alert>
             )}
-            
-            <div className="d-flex justify-content-center mb-3">
-                <select className='form-select me-2' onChange={(e) => { setTempFilter(e.target.value); setModeFilter(e.target.value); }} value={tempFilter}>
-                    <option value="All">All modes</option>
-                    <option value="remote">Remote</option>
-                    <option value="onsite">Onsite</option>
-                    <option value="hybrid">Hybrid</option>
-                </select>
-                <select className='form-select me-2' onChange={(e) => { setTempTypeFilter(e.target.value); }} value={tempTypeFilter}>
-                    <option value="All">All types</option>
-                    <option value="full time">Full Time</option>
-                    <option value="part time">Part Time</option>
-                    <option value="contract">Contract</option>
-                </select>
-            </div>
 
-            <div className="row">
-                {filterJobs.length > 0 ? (
-                    filterJobs.map(job => (
-                        <Col key={job.id} xs={12} sm={6} md={4} className="mb-4">
-                            <JobCard job={job} />
-                        </Col>
-                    ))
-                ) : (
-                    !isLoading && <p className="text-center mt-3">No job applications available.</p>
-                )}
-            </div>
+            {errMsg && <Alert variant="danger">{errMsg}</Alert>}
+
+            <JobFilters 
+                modeFilter={modeFilter} 
+                setModeFilter={setModeFilter} 
+                tempTypeFilter={tempTypeFilter} 
+                setTempTypeFilter={setTempTypeFilter} 
+            />
+
+            <JobList filterJobs={filterJobs} isLoading={isLoading} />
         </div>
     );
 }

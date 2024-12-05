@@ -9,6 +9,7 @@ import { Container } from "react-bootstrap";
 import JobPage from './pages/JobPage';
 import Header from './components/Header';
 import { fetchJobs } from './jobs/jobsSlice';
+import { fetchNotes } from './notes/notesSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function App() {
             setIsLoading(false);
         };
         fetchData();
+        dispatch(fetchNotes());
     }, [dispatch]);
   
   useEffect(() => {

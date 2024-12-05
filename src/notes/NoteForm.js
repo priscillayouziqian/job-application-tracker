@@ -3,7 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, FormGroup, Label } from "reactst
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { validateNoteForm } from '../utils/validateNoteForm';
 import { useDispatch } from 'react-redux';
-import { addNote } from './notesSlice';
+import { postNote } from './notesSlice';
 
 const NoteForm = ({jobId}) => {
     const [ modalOpen, setModalOpen ] = useState(false);
@@ -15,7 +15,7 @@ const NoteForm = ({jobId}) => {
           note: values.note,
           date: new Date(Date.now()).toISOString()
         };
-        dispatch(addNote(note));
+        dispatch(postNote(note));
         console.log(note);
         setModalOpen(false);
     }
