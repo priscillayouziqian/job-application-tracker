@@ -39,6 +39,7 @@ const NotesList = ({jobId}) => {
         </Badge>
       </Stack>
       <h4>There are no notes for this application yet.</h4>
+      <NoteForm jobId={jobId} />
     </Col>
   );
 }

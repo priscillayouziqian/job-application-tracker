@@ -4,17 +4,16 @@ import { validateAddApplicationForm } from "../utils/validateAddApplicationForm"
 import SkillsCheckboxGroup from "./SkillsCheckboxGroup";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { baseUrl } from "../shared/baseUrl";
 
 const AddApplicationForm = () => {
     const navigate = useNavigate();
     const [modal, setModal] = useState(false);
 
-    const handleSubmit = (values, { resetForm }) => {
-        // console.log('Application values: ', values);
-        // console.log('in JSON format: ', JSON.stringify(values));
+    const handleSubmit = async (values, { resetForm }) => {
         const application = {
             name: values.name,
-            mode: values.type,
+            mode: values.mode,
             company: values.company,
             status: values.status,
             type: values.type,
@@ -24,8 +23,22 @@ const AddApplicationForm = () => {
         };
         console.log(application);
 
-        setModal(true); //show the success msg modal
-        resetForm();
+        try {
+            const response = await fetch(baseUrl + 'jobs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(application),
+            });
+
+            const data = await response.json();
+            console.log('Success:', data);
+            setModal(true); // Show the success msg modal
+            resetForm();
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     // when user closes the modal, navigate to home page
@@ -33,6 +46,7 @@ const AddApplicationForm = () => {
         setModal(!modal);
         if (modal) {
             navigate('/');
+            window.location.reload();
         }
     }
 

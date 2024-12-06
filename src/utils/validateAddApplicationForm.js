@@ -16,6 +16,12 @@ export const validateAddApplicationForm = (values) => {
     if(!values.type){
         errors.type = 'Required';
     }
+    if(!values.skills || values.skills.length === 0){
+        errors.skills = 'At least one skill is required';
+    }
+    if(!values.jobLink){
+        errors.jobLink = "Required";
+    }
 
     return errors;
 }

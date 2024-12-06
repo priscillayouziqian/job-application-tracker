@@ -1,7 +1,7 @@
 import { Field } from "formik";
 
 const SkillsCheckboxGroup = ({ name }) => {
-    let jobSkillsArray = ["JavaScript", "Python", "Java", "Go", "React", "React Native"];
+    let jobSkillsArray = ["JavaScript", "Python", "Java", "Go", "C#", "React", "React Native", "SQL", "Cloud skills"];
 
     return (
         <div role="group" aria-labelledby="checkbox-group" className="d-flex flex-wrap">
