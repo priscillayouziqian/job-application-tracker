@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const noteSchema = new Schema({
+    note: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    }
+}, {
+    timestamps: true
+});
+
 const jobSchema = new Schema({
     name: {
         type: String,
@@ -27,8 +40,12 @@ const jobSchema = new Schema({
         required: true
     },
     status: {
-        type: String,
+        type:[String],
         required: true
+    },
+    dateApplied: {
+        type: Date,
+        default: Date.now
     },
     note: [noteSchema] //every job document to be able to contain multiple comment docs stored within an array
 }, {
