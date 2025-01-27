@@ -46,7 +46,8 @@ const JobPage = () => {
           <Card style={{ width: '100%' }}>
             <Card.Body>
               <Card.Title className="mb-3">{job.name}</Card.Title>
-              <Card.Text className="mb-2 text-muted">Applied company: {job.company}</Card.Text>
+              <Card.Text className="text-muted">Applied company: {job.company}</Card.Text>
+              <Card.Text>Type: {job.type}</Card.Text>
               <Card.Text>Position mode: {job.mode}</Card.Text>
               <Card.Text>Application status: {job.status}</Card.Text>
             </Card.Body>
