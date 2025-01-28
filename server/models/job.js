@@ -36,18 +36,18 @@ const jobSchema = new Schema({
         required: true
     },
     skills: {
-        type: String,
+        type: [String],
         required: true
     },
     status: {
-        type:[String],
+        type: String,
         required: true
     },
     dateApplied: {
         type: Date,
         default: Date.now
     },
-    note: [noteSchema] //every job document to be able to contain multiple comment docs stored within an array
+    notes: [noteSchema] //every job document to be able to contain multiple comment docs stored within an array
 }, {
     timestamps: true
 });

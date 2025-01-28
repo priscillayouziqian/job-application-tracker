@@ -5,18 +5,24 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 //import routers
 const jobRouter = require('./routes/jobRouter');
-const noteRouter = require('./routes/noteRouter');
 
 //connect to mongodb database
 const mongoose = require('mongoose');
 const url = 'mongodb://127.0.0.1:27017/nucampsite';
-const connect = mongoose.connect(url, {});
-connect.then(() => console.log('Connected correctly to server'),
-  err => console.log(err)
-);
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('Connected correctly to MongoDB server'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 const app = express();
 
+// Define hostname and port
+const hostname = '127.0.0.1';
+const port = 3000;
+
+//Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -24,33 +30,40 @@ app.use(cookieParser());
 
 // Mount routers BEFORE the catch-all middleware
 app.use('/jobs', jobRouter);
-app.use('/notes', noteRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    next(createError(404));
-  });
-  
-// Move catch-all middleware to the end
-// This will only run if no other routes match
-// app.use('*', (req, res) => {
-//     res.statusCode = 200;
-//     res.setHeader('Content-Type', 'text/html');
-//     res.end('<html><body><h1>This is an Express Server</h1></body></html>');
-// });
+// Catch-all route for testing server connection
+app.use('*', (req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/html');
+  res.end('<html><body><h1>This is an Express Server</h1></body></html>');
+});
 
-// app.listen(port, hostname, () => {
-//     console.log(`Server running at http://${hostname}:${port}/`);
-// });
-// error handler
-app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+// Catch 404 and forward to error handler
+app.use((req, res, next) => {
+  next(createError(404));
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // Log the error
+  console.error(err);
+
+  // Send error response
+  res.status(err.status || 500);
+  res.json({
+    error: {
+      message: err.message,
+      status: err.status || 500
+    }
   });
+});
+
+// Start the server
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
   
-  module.exports = app;
+module.exports = app;
