@@ -1,24 +1,27 @@
 const express = require('express');
 const Job = require('../models/job');
+const authenticate = require('../authenticate');
+
 const jobRouter = express.Router(); //create a express router
 
 //single statement that handles all routings
 jobRouter.route('/')
-.get((req, res, next) => {
+.get(authenticate.verifyUser, (req, res, next) => {
     Job.find()
+    .populate('notes.author')
     .then(jobs => res.status(200).json(jobs))
     .catch(err => next(err))
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Job.create(req.body)
     .then(job => res.status(201).json(job))
     .catch(err => next(err))
 })
-.put((req, res) => {
+.put(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403;
     res.end('PUT operation not supported on /jobs');
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Job.deleteMany()
     .then(jobs => res.status(200).json(jobs))
     .catch(err => next(err))
@@ -27,14 +30,15 @@ jobRouter.route('/')
 jobRouter.route('/:jobId')
 .get((req, res, next) => {
     Job.findById(req.params.jobId)
+    .populate('notes.author')
     .then(job => res.status(200).json(job))
     .catch(err => next(err))
 })
-.post((req, res) => {
+.post(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403,
     res.end(`POST not supported on /jobs/${req.params.jobId}`)
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Job.findByIdAndUpdate(req.params.jobId, {
         $set: req.body
     }, {
@@ -43,7 +47,7 @@ jobRouter.route('/:jobId')
     .then(job => res.status(200).json(job))
     .catch(err => next(err))
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Job.findByIdAndDelete(req.params.jobId)
     .then(job => res.status(200).json(job))
     .catch(err => next(err))
@@ -52,6 +56,7 @@ jobRouter.route('/:jobId')
 jobRouter.route('/:jobId/notes')
 .get((req, res, next) => {
     Job.findById(req.params.jobId)
+    .populate('notes.author')
     .then(job => {
         if(job){
             res.status(200).json(job.notes)
@@ -63,10 +68,11 @@ jobRouter.route('/:jobId/notes')
     })
     .catch(err => next(err))
 })
-.post((req, res, next) => {
+.post(authenticate.verifyUser, (req, res, next) => {
     Job.findById(req.params.jobId)
     .then(job => {
         if(job){
+            req.body.author = req.user._id; //add a new note to save current user's _id to author field in post request
             job.notes.push(req.body);
             job.save()
             .then(job => res.status(200).json(job))
@@ -79,11 +85,11 @@ jobRouter.route('/:jobId/notes')
     })
     .catch(err => next(err))
 })
-.put((req, res) => {
+.put(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403;
     res.end(`PUT operation not supported on /jobs/${req.params.jobId}/notes`);
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {
     Job.findById(req.params.jobId)
     .then(job => {
         if(job){
@@ -105,6 +111,7 @@ jobRouter.route('/:jobId/notes')
 jobRouter.route('/:jobId/notes/:noteId')
 .get((req, res, next) => {
     Job.findById(req.params.jobId)
+    .populate('notes.author')
     .then(job => {
         if(job && job.notes.id(req.params.noteId)){
             res.status(200).json(job.notes.id(req.params.noteId))
@@ -120,20 +127,26 @@ jobRouter.route('/:jobId/notes/:noteId')
     })
     .catch(err => next(err))
 })
-.post((req, res) => {
+.post(authenticate.verifyUser, (req, res) => {
     res.statusCode = 403;
     res.end(`POST operation not supported on /jobs/${req.params.jobId}/notes/${req.params.noteId}`);
 })
-.put((req, res, next) => {
+.put(authenticate.verifyUser, (req, res, next) => {
     Job.findById(req.params.jobId)
     .then(job => {
         if(job && job.notes.id(req.params.noteId)){
-            if(req.body.note){
-                job.notes.id(req.params.noteId).note = req.body.note;
+            if((job.notes.id(req.params.noteId).author._id).equals(req.user._id)){
+                if(req.body.note){
+                    job.notes.id(req.params.noteId).note = req.body.note;
+                }
+                job.save()
+                .then(job => res.status(200).json(job))
+                .catch(err => next(err))
+            }else{
+                err = new Error('You are not authorized to update this comment')
+                err.status = 403;
+                return next(err)
             }
-            job.save()
-            .then(job => res.status(200).json(job))
-            .catch(err => next(err))
         }else if(!job){
             err = new Error(`Job ${req.params.jobId} not found`);
             err.status = 404;
@@ -146,14 +159,20 @@ jobRouter.route('/:jobId/notes/:noteId')
     })
     .catch(err => next(err))
 })
-.delete((req, res, next) => {
+.delete(authenticate.verifyUser, (req, res, next) => {
     Job.findById(req.params.jobId)
     .then(job => {
         if(job && job.notes.id(req.params.noteId)){
-            job.notes.id(req.params.noteId).deleteOne();
-            job.save()
-            .then(job => res.status(200).json(job))
-            .catch(err => next(err))
+            if((job.notes.id(req.params.noteId).author._id).equals(req.user._id)){
+                job.notes.id(req.params.noteId).deleteOne();
+                job.save()
+                .then(job => res.status(200).json(job))
+                .catch(err => next(err))
+            }else{
+                err = new Error('You are not authorized to delete this comment')
+                err.status = 403;
+                return next(err)
+            }     
         }else if(!job){
             err = new Error(`Job ${req.params.jobId} not found`);
             err.status = 404;

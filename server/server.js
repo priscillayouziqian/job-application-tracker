@@ -2,13 +2,15 @@ const express = require('express');
 const logger = require('morgan');
 const createError = require('http-errors');
 const path = require('path');
-const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const config = require('./config');
 //import routers
 const jobRouter = require('./routes/jobRouter');
+const userRouter = require('./routes/users');
 
 //connect to mongodb database
 const mongoose = require('mongoose');
-const url = 'mongodb://127.0.0.1:27017/nucampsite';
+const url = config.mongoUrl; 
 mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -26,9 +28,11 @@ const port = 3000;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+app.use(passport.initialize());
 
 // Mount routers BEFORE the catch-all middleware
+app.use('/users', userRouter);
 app.use('/jobs', jobRouter);
 
 // Catch-all route for testing server connection

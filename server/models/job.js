@@ -9,6 +9,10 @@ const noteSchema = new Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId, //a reference to a user document via user document object id
+        ref: 'User' //model name User for the document (line 19)
     }
 }, {
     timestamps: true
