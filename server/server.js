@@ -1,12 +1,15 @@
+require('dotenv').config();
 const express = require('express');
 const logger = require('morgan');
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const path = require('path');
 const passport = require('passport');
 const config = require('./config');
 //import routers
 const jobRouter = require('./routes/jobRouter');
 const userRouter = require('./routes/users');
+// Error handling
+const { errorHandler, notFoundHandler } = require('./errorHandler');
 
 //connect to mongodb database
 const mongoose = require('mongoose');
@@ -18,56 +21,35 @@ mongoose.connect(url, {
 .then(() => console.log('Connected correctly to MongoDB server'))
 .catch(err => console.error('MongoDB connection error:', err));
 
+// Initialize Express app
 const app = express();
 
-// Define hostname and port
-const hostname = '127.0.0.1';
-const port = 3000;
+// // Define hostname and port
+// const hostname = '127.0.0.1';
+// const port = 3000;
 
 //Middleware
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
 app.use(passport.initialize());
 
 // Mount routers BEFORE the catch-all middleware
 app.use('/users', userRouter);
 app.use('/jobs', jobRouter);
 
-// Catch-all route for testing server connection
-app.use('*', (req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/html');
-  res.end('<html><body><h1>This is an Express Server</h1></body></html>');
+// Simple home route
+app.get('/', (req, res) => {
+  res.json({ message: 'Job Tracker API' });
 });
 
-// Catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(createError(404));
-});
+// Error handlers (come after routes)
+app.use(notFoundHandler);
+app.use(errorHandler);
 
-// Error handler
-app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // Log the error
-  console.error(err);
-
-  // Send error response
-  res.status(err.status || 500);
-  res.json({
-    error: {
-      message: err.message,
-      status: err.status || 500
-    }
-  });
-});
-
-// Start the server
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+// Start server
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
   
 module.exports = app;

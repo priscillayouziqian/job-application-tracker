@@ -15,6 +15,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     }
+    // jobs: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Job'
+    // }]
 });
 
 userSchema.plugin(passportLocalMongoose);
