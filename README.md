@@ -10,13 +10,19 @@ This Job Application Tracker application is a front-end project integrated with 
 
 ## Start the app
 
+- Front end only:
+
 Start the JSON server on localhost:3001 `json-server -H 0.0.0.0 --watch db.json -p 3001 -d 2000` 
 
-Start the React frontend only: `cd client` `npm start` or from the root directory `npm run client`
+Start the React: `cd client` `npm start` or from the root directory `npm run client`
+
+- Back end only:
+
+Start the MongoDB server: Inside mongodb folder `mongod --dbpath=data`
 
 Start the Node backend only: `npm run server`
 
-Run both: `npm run dev`
+- Run both: `npm run dev`
 
 
 ## How It's Made
