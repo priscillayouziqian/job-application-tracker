@@ -5,6 +5,9 @@ const logger = require('morgan');
 const path = require('path');
 const passport = require('passport');
 const config = require('./config');
+const https = require('https');
+const fs = require('fs');
+const cors = require('cors');
 //import routers
 const jobRouter = require('./routes/jobRouter');
 const userRouter = require('./routes/users');
@@ -32,6 +35,7 @@ const app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(passport.initialize());
+app.use(cors());
 
 // Mount routers BEFORE the catch-all middleware
 app.use('/users', userRouter);
@@ -46,10 +50,33 @@ app.get('/', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
+// Read certificate files
+const options = {
+  key: fs.readFileSync('./bin/key.pem'),   
+  cert: fs.readFileSync('./bin/cert.pem')   
+};
+
+const secureServer = https.createServer(options, app);
+
+// Start HTTPS server
+const securePort = process.env.SECURE_PORT || 3443;
+secureServer.listen(securePort, () => {
+    console.log(`Secure server listening on port ${securePort}`);
+});
+
+// Redirect HTTP to HTTPS
+app.all('*', (req, res, next) => {
+  if (req.secure) {
+      return next();
+  } else {
+      res.redirect(301, `https://${req.hostname}:${securePort}${req.url}`);
+  }
+});
+
 // Start server
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-  
+
 module.exports = app;

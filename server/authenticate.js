@@ -6,6 +6,7 @@ const Job = require('./models/job.js');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 
 const config = require('./config.js');
 
@@ -68,3 +69,31 @@ exports.verifyJobOwner = (req, res, next) => {
     })
     .catch(err => next(err));
 };
+
+exports.googlePassport = passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    passReqToCallback: true
+},
+async (request, accessToken, refreshToken, profile, done) => {
+    try {
+        console.log('Google profile:', profile); // Debugging line
+        let user = await User.findOne({ googleId: profile.id });
+        if (user) {
+            return done(null, user);
+        } else {
+            user = new User({
+                username: profile.displayName,
+                googleId: profile.id,
+                firstname: profile.name.givenName,
+                lastname: profile.name.familyName,
+                profilePicture: profile.photos[0]?.value
+            });
+            await user.save();
+            return done(null, user);
+        }
+    } catch (err) {
+        return done(err, false);
+    }
+}));

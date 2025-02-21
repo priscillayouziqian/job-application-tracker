@@ -40,6 +40,34 @@ const HomePage = () => {
         }
     }, [modeFilter, tempTypeFilter, jobsList, isLoading]);
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token) {
+            console.log('Token found:', token); // Debugging line
+            localStorage.setItem('token', token);
+            fetchUserProfile(token); // Fetch user profile
+        } else {
+            console.log('No token found'); // Debugging line
+        }
+    }, []);
+
+    const fetchUserProfile = async (token) => {
+        console.log('Fetching user profile with token:', token); // Debugging line
+        try {
+            const response = await fetch('https://localhost:3443/users/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const userData = await response.json();
+            console.log('Fetched user data:', userData); // Debugging line
+            localStorage.setItem('user', JSON.stringify(userData)); // Store user data
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
+    };
+
     const handleAlertClose = () => {
         setShow(false);
         setModeFilter("All");

@@ -14,7 +14,9 @@ const userSchema = new Schema({
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    googleId: String,
+    profilePicture: String
     // jobs: [{
     //     type: Schema.Types.ObjectId,
     //     ref: 'Job'

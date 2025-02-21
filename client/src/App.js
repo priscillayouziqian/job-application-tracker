@@ -11,6 +11,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { fetchJobs } from './jobs/jobsSlice';
 import { fetchNotes } from './notes/notesSlice';
+import Login from './components/Login';
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ function App() {
             <Route path='/' element={ <HomePage jobsList={jobsList} isLoading={isLoading}/> } />
             <Route path='/jobs/:jobId' element={ <JobPage jobsList={jobsList} /> } />
             <Route path='/addApplication' element={ <AddApplicatonPage /> } />
+            <Route path='/login' element={ <Login /> } />
         </Routes>
       </Container>
 
